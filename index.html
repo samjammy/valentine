@@ -3,45 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Arshi 💖</title>
+<title>For Arshi ❤️</title>
 
 <style>
 body {
   margin: 0;
   height: 100vh;
+  background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(-45deg, #ffd6e8, #ffe3f1, #fce1f1, #fff0f7);
-  background-size: 400% 400%;
-  animation: gradient 10s ease infinite;
-  font-family: 'Segoe UI', sans-serif;
-  overflow: hidden;
-}
-
-@keyframes gradient {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
+  text-align: center;
 }
 
 .container {
-  text-align: center;
+  max-width: 500px;
   padding: 20px;
+  z-index: 2;
 }
 
 h1 {
-  font-size: 2.2rem;
-  color: #333;
+  font-size: 2rem;
   min-height: 60px;
 }
 
-button {
-  padding: 14px 35px;
+button, select {
+  padding: 12px 28px;
   margin: 15px;
+  border-radius: 30px;
   border: none;
-  border-radius: 40px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: 0.3s ease;
 }
@@ -49,7 +43,7 @@ button {
 #yesBtn {
   background: #ff4f81;
   color: white;
-  box-shadow: 0 10px 25px rgba(255, 79, 129, 0.4);
+  box-shadow: 0 0 20px rgba(255,79,129,0.6);
 }
 
 #yesBtn:hover {
@@ -57,20 +51,36 @@ button {
 }
 
 #noBtn {
-  background: #e0e0e0;
+  background: #ccc;
   position: absolute;
 }
 
-.message {
-  margin-top: 20px;
-  font-size: 1.4rem;
-  color: #ff2e63;
-  opacity: 0;
-  transition: opacity 1s ease;
+select {
+  display: none;
 }
 
-.show {
-  opacity: 1;
+.scene {
+  display: none;
+  margin-top: 20px;
+  animation: fadeIn 1.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  from {opacity: 0.2;}
+  to {opacity: 1;}
 }
 
 canvas {
@@ -88,32 +98,78 @@ canvas {
 
 <div class="container">
   <h1 id="question"></h1>
+
   <button id="yesBtn">Yes 💖</button>
   <button id="noBtn">No 🙈</button>
-  <div class="message" id="loveMsg">
-    You just made my world brighter ✨  
-    Thank you for loving quietly and caring deeply 💞
+
+  <div>
+    <select id="planSelect">
+      <option value="">Choose our first scene ✨</option>
+      <option value="movie">🎬 Movie – 3:30 PM</option>
+      <option value="cafe">☕ Café – 7:30 PM</option>
+    </select>
+  </div>
+
+  <div id="movieScene" class="scene">
+    <h3>🎬 Cinema – 3:30 PM</h3>
+    <p>
+      We reach a little early.  
+      Share popcorn.  
+      Laugh at random scenes.  
+      And I quietly think —  
+      I’m glad it’s you beside me.
+    </p>
+  </div>
+
+  <div id="cafeScene" class="scene">
+    <h3>☕ Café – 7:30 PM</h3>
+    <p>
+      Warm lights. Soft music.  
+      Two cups. One table.  
+      A quiet moment where I say —  
+      I didn’t want a loud memory…  
+      I wanted a meaningful one.
+    </p>
+  </div>
+
+  <div id="finalScene" class="scene">
+    <h3>🌙 The Full Plan</h3>
+    <p>
+      3:30 PM — Cinema 🎬  
+      7:30 PM — Café ☕  
+      Under this same sky…  
+      with the same person I chose.
+    </p>
   </div>
 </div>
 
 <audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_6f7d4b1c2c.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_946e6b51c0.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-// Typing effect
-const text = "Arshi... will you be my Valentine? 💘";
+// Generate Stars
+for(let i=0;i<150;i++){
+  let star=document.createElement("div");
+  star.className="star";
+  star.style.top=Math.random()*100+"vh";
+  star.style.left=Math.random()*100+"vw";
+  document.body.appendChild(star);
+}
+
+// Typing Effect
+const text = "Arshi… under this sky, will you be my Valentine? 🌌";
 let i = 0;
 function typeEffect() {
   if (i < text.length) {
     document.getElementById("question").innerHTML += text.charAt(i);
     i++;
-    setTimeout(typeEffect, 60);
+    setTimeout(typeEffect, 50);
   }
 }
 typeEffect();
 
-// Move No button
+// Move No Button
 const noBtn = document.getElementById("noBtn");
 noBtn.addEventListener("mouseover", () => {
   const x = Math.random() * (window.innerWidth - 100);
@@ -122,11 +178,32 @@ noBtn.addEventListener("mouseover", () => {
   noBtn.style.top = `${y}px`;
 });
 
-// Yes click
-document.getElementById("yesBtn").addEventListener("click", () => {
-  document.getElementById("loveMsg").classList.add("show");
+// Yes Button Click
+document.getElementById("yesBtn").addEventListener("click", function(){
   document.getElementById("bgMusic").play();
+  this.style.display="none";
+  noBtn.style.display="none";
+  document.getElementById("planSelect").style.display="inline-block";
   startConfetti();
+});
+
+// Dropdown Scene Selection
+document.getElementById("planSelect").addEventListener("change", function(){
+  document.getElementById("movieScene").style.display="none";
+  document.getElementById("cafeScene").style.display="none";
+
+  if(this.value==="movie"){
+    document.getElementById("movieScene").style.display="block";
+  }
+  if(this.value==="cafe"){
+    document.getElementById("cafeScene").style.display="block";
+  }
+
+  setTimeout(()=>{
+    document.getElementById("movieScene").style.display="block";
+    document.getElementById("cafeScene").style.display="block";
+    document.getElementById("finalScene").style.display="block";
+  },4000);
 });
 
 // Confetti
@@ -138,11 +215,11 @@ canvas.height = window.innerHeight;
 let pieces = [];
 
 function startConfetti() {
-  for (let i = 0; i < 150; i++) {
+  for (let i = 0; i < 120; i++) {
     pieces.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height - canvas.height,
-      size: Math.random() * 8 + 4,
+      size: Math.random() * 6 + 4,
       speed: Math.random() * 3 + 2
     });
   }
@@ -152,7 +229,7 @@ function startConfetti() {
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   pieces.forEach(p => {
-    ctx.fillStyle = "pink";
+    ctx.fillStyle = "#ff4f81";
     ctx.fillRect(p.x, p.y, p.size, p.size);
     p.y += p.speed;
   });
